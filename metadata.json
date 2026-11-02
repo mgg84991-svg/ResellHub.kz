@@ -1,0 +1,6 @@
+{
+  "name": "ResellHub - Маркетплейс ненужных вещей",
+  "description": "Удобный маркетплейс для продажи и покупки ненужных вещей: безопасная авторизация, личный кабинет, история заказов, чат с продавцом, отзывы и админ-панель.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
