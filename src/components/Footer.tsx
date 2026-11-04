@@ -1,9 +1,10 @@
 import React from 'react';
-import { ShoppingBag, ShieldCheck, Heart, MessageSquare } from 'lucide-react';
+import { ShoppingBag, ShieldCheck, Heart, MessageSquare, Download } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { ResellHubLogo } from './ResellHubLogo';
 
 export const Footer: React.FC = () => {
-  const { setFilters, setCurrentView, categories } = useApp();
+  const { setFilters, setCurrentView, categories, setIsPWAInstallModalOpen, setIsBadgeModalOpen } = useApp();
 
   return (
     <footer className="mt-16 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-12 pb-24 sm:pb-12 text-slate-600 dark:text-slate-400 text-xs">
@@ -12,14 +13,7 @@ export const Footer: React.FC = () => {
           
           {/* Brand Info */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md">
-                <ShoppingBag className="w-4 h-4" />
-              </div>
-              <span className="text-lg font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                ResellHub.kz
-              </span>
-            </div>
+            <ResellHubLogo size="sm" />
             <p className="text-slate-500 text-xs leading-relaxed">
               Удобный и надежный сервис в Казахстане для продажи и покупки ненужных вещей, мебели, техники и одежды с самовывозом и курьерской доставкой.
             </p>
@@ -61,7 +55,29 @@ export const Footer: React.FC = () => {
               <li className="hover:text-emerald-600 cursor-pointer">Как работает безопасная доставка по РК</li>
               <li className="hover:text-emerald-600 cursor-pointer">Покупка самовывозом (без доставки)</li>
               <li className="hover:text-emerald-600 cursor-pointer">Правила публикации объявлений</li>
-              <li className="hover:text-emerald-600 cursor-pointer">Советы по быстрой продаже в Казахстане</li>
+              <li 
+                onClick={() => setIsPWAInstallModalOpen(true)}
+                className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline cursor-pointer flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Скачать на экран «Домой» (PWA)</span>
+              </li>
+              <li
+                onClick={() => setIsBadgeModalOpen(true)}
+                className="text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 cursor-pointer flex items-center gap-1.5 transition font-semibold"
+              >
+                <img src="/favicon.svg" alt="" className="w-3.5 h-3.5 rounded-sm" />
+                <span>Официальный значок приложения (SVG / HD)</span>
+              </li>
+              <li>
+                <a 
+                  href="/icon.svg" 
+                  download="resellhub-badge.svg" 
+                  className="text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1.5 transition"
+                >
+                  <span>📥 Скачать значок (SVG)</span>
+                </a>
+              </li>
             </ul>
           </div>
 

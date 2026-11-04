@@ -1,13 +1,13 @@
 import React from 'react';
-import { PlusCircle, ShieldCheck, Sparkles, Truck, HeartHandshake, ArrowRight } from 'lucide-react';
+import { PlusCircle, ShieldCheck, Sparkles, Truck, HeartHandshake, ArrowRight, Download } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const HeroBanner: React.FC = () => {
-  const { setIsCreateModalOpen, currentUser, setIsAuthModalOpen, setFilters } = useApp();
+  const { setIsCreateModalOpen, currentUser, openAuthModal, setFilters, setIsPWAInstallModalOpen, setIsBadgeModalOpen } = useApp();
 
   const handlePostClick = () => {
     if (!currentUser) {
-      setIsAuthModalOpen(true);
+      openAuthModal('login', 'Чтобы разместить объявление, войдите в систему или зарегистрируйтесь по номеру телефона');
     } else {
       setIsCreateModalOpen(true);
     }
@@ -21,9 +21,19 @@ export const HeroBanner: React.FC = () => {
 
       <div className="relative z-10 max-w-2xl space-y-4">
         {/* Badge */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold tracking-wide">
-          <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-          <span>🇰🇿 Ресейл-маркетплейс Казахстана • Цены в тенге (₸)</span>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-bold tracking-wide">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>🇰🇿 Ресейл-маркетплейс Казахстана • Цены в тенге (₸)</span>
+          </div>
+
+          <button
+            onClick={() => setIsPWAInstallModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-500/20 hover:bg-sky-500/35 border border-sky-400/40 text-sky-200 text-xs font-bold tracking-wide transition cursor-pointer active:scale-95 shadow-xs"
+          >
+            <Download className="w-3.5 h-3.5 text-sky-300" />
+            <span>📲 Скачать на экран «Домой» (iOS / Android / Mac)</span>
+          </button>
         </div>
 
         {/* Heading */}
@@ -77,6 +87,21 @@ export const HeroBanner: React.FC = () => {
             <span>Честные отзывы</span>
           </div>
         </div>
+      </div>
+
+      {/* Decorative Brand Emblem Badge on Right for Desktop */}
+      <div className="hidden lg:flex absolute right-12 top-1/2 -translate-y-1/2 items-center justify-center">
+        <button
+          onClick={() => setIsBadgeModalOpen(true)}
+          className="group relative w-56 h-56 rounded-3xl bg-slate-950/80 p-3 border border-emerald-500/30 shadow-2xl shadow-emerald-500/20 backdrop-blur-md transform rotate-3 hover:rotate-0 hover:scale-105 transition-all duration-300 text-left cursor-pointer"
+          title="Нажмите, чтобы открыть и скачать значок ResellHub"
+        >
+          <img src="/icon.svg" alt="Значок ResellHub" className="w-full h-full object-contain filter drop-shadow-lg" />
+          <div className="absolute -bottom-3 -right-2 px-3 py-1 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[11px] font-black shadow-lg flex items-center gap-1 group-hover:bg-emerald-400">
+            <Sparkles className="w-3 h-3 text-amber-300" />
+            <span>Значок приложения</span>
+          </div>
+        </button>
       </div>
     </div>
   );

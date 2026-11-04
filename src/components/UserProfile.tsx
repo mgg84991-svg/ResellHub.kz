@@ -41,7 +41,7 @@ export const UserProfile: React.FC = () => {
 
   // Profile Edit State
   const [nameInput, setNameInput] = useState(currentUser?.name || '');
-  const [cityInput, setCityInput] = useState(currentUser?.city || 'Москва');
+  const [cityInput, setCityInput] = useState(currentUser?.city || 'Алматы');
   const [phoneInput, setPhoneInput] = useState(currentUser?.phone || '');
   const [bioInput, setBioInput] = useState(currentUser?.bio || '');
 

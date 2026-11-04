@@ -21,6 +21,8 @@ import {
 import { useApp } from '../context/AppContext';
 
 import { CITIES_KZ } from '../data/mockData';
+import { PWAInstallButton } from './PWAInstallButton';
+import { ResellHubLogo } from './ResellHubLogo';
 
 interface NavbarProps {
   onToggleFiltersMobile?: () => void;
@@ -31,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleFiltersMobile }) => {
     currentUser, 
     logout, 
     setIsAuthModalOpen, 
+    openAuthModal,
     setIsCreateModalOpen,
     setIsChatModalOpen,
     unreadMessagesCount,
@@ -47,7 +50,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleFiltersMobile }) => {
     categories,
     isDarkMode,
     toggleDarkMode,
-    showToast
+    showToast,
+    setIsBadgeModalOpen
   } = useApp();
 
   const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
@@ -107,8 +111,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleFiltersMobile }) => {
 
   const handleSellClick = () => {
     if (!currentUser) {
-      showToast('Для загрузки объявления требуется ввести логин и пароль', 'info');
-      setIsAuthModalOpen(true);
+      openAuthModal('login', 'Чтобы разместить объявление, войдите в систему или зарегистрируйтесь по номеру телефона');
     } else {
       setIsCreateModalOpen(true);
     }
@@ -153,19 +156,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleFiltersMobile }) => {
           <div className="flex items-center gap-3 sm:gap-6 shrink-0">
             <button 
               onClick={() => { setCurrentView('home'); }} 
-              className="flex items-center gap-2 group text-left"
+              className="flex items-center group text-left transition-transform active:scale-98"
+              aria-label="На главную ResellHub.kz"
             >
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
-              </div>
-              <div className="leading-tight">
-                <span className="text-xl sm:text-2xl font-black tracking-tight bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 bg-clip-text text-transparent">
-                  ResellHub.kz
-                </span>
-                <span className="hidden sm:block text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
-                  Казахстан ₸
-                </span>
-              </div>
+              <ResellHubLogo size="md" />
             </button>
 
             {/* City Selector */}
@@ -276,6 +270,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleFiltersMobile }) => {
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            {/* PWA Install Button (iPhone, Android, Mac) */}
+            <PWAInstallButton variant="navbar" />
+
+            {/* App Badge Button */}
+            <button
+              onClick={() => setIsBadgeModalOpen(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition active:scale-95 shadow-2xs"
+              title="Фирменный значок приложения ResellHub (скачать SVG/PNG)"
+            >
+              <img src="/favicon.svg" alt="" className="w-4 h-4 rounded-md shadow-2xs" />
+              <span className="hidden sm:inline">Значок</span>
+            </button>
+
             {/* Theme Toggle */}
             <button
               onClick={toggleDarkMode}
@@ -451,6 +458,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleFiltersMobile }) => {
                           <span>Панель модератора / Админка</span>
                         </button>
                       )}
+
+                      <div className="pt-1">
+                        <PWAInstallButton variant="menu" />
+                      </div>
                     </div>
 
                     <div className="pt-1 border-t border-slate-100 dark:border-slate-700">

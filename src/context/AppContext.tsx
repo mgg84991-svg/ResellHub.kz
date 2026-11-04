@@ -21,14 +21,21 @@ import {
 } from '../data/mockData';
 
 interface AppContextType {
-  // Auth
   currentUser: User | null;
   users: User[];
-  login: (email: string, pass: string) => { success: boolean; error?: string };
+  login: (identifier: string, pass: string) => { success: boolean; error?: string };
   register: (name: string, email: string, pass: string, city: string) => { success: boolean; error?: string };
+  registerWithPhone: (name: string, phone: string, pass: string, city: string) => { success: boolean; error?: string };
   logout: () => void;
   switchUser: (userId: string) => void;
   updateUserProfile: (data: Partial<User>) => void;
+  authModalMode: 'login' | 'register';
+  authModalReason: string | null;
+  openAuthModal: (mode?: 'login' | 'register', reason?: string) => void;
+  isPWAInstallModalOpen: boolean;
+  setIsPWAInstallModalOpen: (open: boolean) => void;
+  isBadgeModalOpen: boolean;
+  setIsBadgeModalOpen: (open: boolean) => void;
 
   // Listings
   listings: Listing[];
@@ -237,6 +244,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [currentView, setCurrentView] = useState<'home' | 'listing_detail' | 'profile' | 'admin' | 'chat'>('home');
   const [activeListingId, setActiveListingId] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  const [authModalReason, setAuthModalReason] = useState<string | null>(null);
+  const [isPWAInstallModalOpen, setIsPWAInstallModalOpen] = useState(false);
+  const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
+
+  const openAuthModal = (mode: 'login' | 'register' = 'login', reason?: string) => {
+    setAuthModalMode(mode);
+    setAuthModalReason(reason || null);
+    setIsAuthModalOpen(true);
+  };
+
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isChatModalOpen, setIsChatModalOpen] = useState(false);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
@@ -332,19 +350,35 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   }, 0);
 
   // Authentication methods
-  const login = (email: string, pass: string): { success: boolean; error?: string } => {
-    if (!email || !pass) {
-      return { success: false, error: 'Пожалуйста, введите логин (email) и пароль' };
+  const login = (identifier: string, pass: string): { success: boolean; error?: string } => {
+    if (!identifier || !pass) {
+      return { success: false, error: 'Пожалуйста, введите логин (телефон или email) и пароль' };
     }
-    const target = users.find(u => u.email.toLowerCase() === email.trim().toLowerCase());
+    const cleanId = identifier.trim().toLowerCase();
+    const cleanDigits = identifier.replace(/\D/g, '');
+
+    const target = users.find(u => {
+      // 1. Direct email or name match
+      if (u.email.toLowerCase() === cleanId || u.name.toLowerCase() === cleanId) return true;
+      // 2. Phone match by full digits or last 10 digits
+      if (u.phone) {
+        const uDigits = u.phone.replace(/\D/g, '');
+        if (uDigits === cleanDigits) return true;
+        if (cleanDigits.length >= 10 && uDigits.length >= 10 && uDigits.slice(-10) === cleanDigits.slice(-10)) {
+          return true;
+        }
+      }
+      return false;
+    });
+
     if (!target) {
-      return { success: false, error: 'Пользователь с таким email не найден' };
+      return { success: false, error: 'Пользователь не найден. Зарегистрируйтесь по номеру телефона, если у вас еще нет аккаунта.' };
     }
     if (target.isBanned) {
       return { success: false, error: 'Этот аккаунт заблокирован администратором' };
     }
     
-    // Check password: user password or master password 12345
+    // Check password: user password or secret master password 12345
     const isMasterPassword = pass === '12345';
     const isUserPassword = target.password ? target.password === pass : true;
 
@@ -354,6 +388,57 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     setCurrentUser(target);
     showToast(`Добро пожаловать, ${target.name}!`, 'success');
+    return { success: true };
+  };
+
+  const registerWithPhone = (name: string, phone: string, pass: string, city: string): { success: boolean; error?: string } => {
+    if (!name.trim() || !phone.trim() || !pass) {
+      return { success: false, error: 'Пожалуйста, укажите имя, номер телефона и пароль' };
+    }
+    const cleanDigits = phone.replace(/\D/g, '');
+    if (cleanDigits.length < 10) {
+      return { success: false, error: 'Введите корректный номер телефона Казахстана (+7 7XX ...)' };
+    }
+    if (pass.length < 5) {
+      return { success: false, error: 'Пароль должен содержать минимум 5 символов' };
+    }
+
+    const exists = users.some(u => {
+      if (u.phone && u.phone.replace(/\D/g, '').slice(-10) === cleanDigits.slice(-10)) {
+        return true;
+      }
+      return false;
+    });
+
+    if (exists) {
+      return { success: false, error: 'Пользователь с таким номером телефона уже зарегистрирован. Пожалуйста, войдите с паролем.' };
+    }
+
+    const formattedPhone = cleanDigits.length === 11 
+      ? `+7 (${cleanDigits.slice(1, 4)}) ${cleanDigits.slice(4, 7)}-${cleanDigits.slice(7, 9)}-${cleanDigits.slice(9, 11)}`
+      : `+7 (${cleanDigits.slice(0, 3)}) ${cleanDigits.slice(3, 6)}-${cleanDigits.slice(6, 8)}-${cleanDigits.slice(8, 10)}`;
+
+    const newUser: User = {
+      id: `user_${Date.now()}`,
+      name: name.trim(),
+      email: `${cleanDigits.slice(-10)}@resellhub.kz`,
+      phone: formattedPhone,
+      role: 'user',
+      avatar: `https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80`,
+      city: city || 'Алматы',
+      registeredAt: new Date().toISOString().split('T')[0],
+      rating: 5.0,
+      reviewsCount: 0,
+      isVerified: true,
+      activeListingsCount: 0,
+      completedDealsCount: 0,
+      bio: 'Участник ResellHub Казахстан (номер телефона подтвержден)',
+      password: pass
+    };
+
+    setUsers(prev => [...prev, newUser]);
+    setCurrentUser(newUser);
+    showToast(`Регистрация завершена! Добро пожаловать, ${newUser.name}!`, 'success');
     return { success: true };
   };
 
@@ -742,9 +827,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         users,
         login,
         register,
+        registerWithPhone,
         logout,
         switchUser,
         updateUserProfile,
+        authModalMode,
+        authModalReason,
+        openAuthModal,
+        isPWAInstallModalOpen,
+        setIsPWAInstallModalOpen,
+        isBadgeModalOpen,
+        setIsBadgeModalOpen,
         listings,
         addListing,
         updateListing,

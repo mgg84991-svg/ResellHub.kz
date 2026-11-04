@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Rich Jewel-Tone Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="45%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#0369a1" />
+    </linearGradient>
+
+    <!-- Top Ambient Specular Light -->
+    <linearGradient id="specularGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35" />
+      <stop offset="35%" stop-color="#ffffff" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Neon Circular Sweep Gradients -->
+    <linearGradient id="cyanSweep" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9" />
+      <stop offset="100%" stop-color="#0284c7" />
+    </linearGradient>
+
+    <linearGradient id="emeraldSweep" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <!-- Letter R Pure White with Soft Shading -->
+    <linearGradient id="rGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+
+    <!-- Kazakhstan Gold Sun Accent -->
+    <linearGradient id="goldSun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+
+    <!-- Outer Deep Shadow -->
+    <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="22" flood-color="#022c22" flood-opacity="0.5" />
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+
+    <!-- Inner Glow for R -->
+    <filter id="rGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#022c22" flood-opacity="0.45" />
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.25" />
+    </filter>
+
+    <!-- Gold Dot Glow -->
+    <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#fbbf24" flood-opacity="0.65" />
+    </filter>
+  </defs>
+
+  <!-- Base App Icon / Значок: Squircle with Rich Gradient -->
+  <rect width="512" height="512" rx="118" fill="url(#bgGrad)" />
+
+  <!-- Top Glass Highlight Rim -->
+  <rect x="2" y="2" width="508" height="508" rx="116" fill="url(#specularGlow)" />
+  <rect x="2" y="2" width="508" height="508" rx="116" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.2" />
+
+  <!-- Radial Depth Flare in Center -->
+  <circle cx="256" cy="240" r="210" fill="#38bdf8" fill-opacity="0.08" />
+
+  <!-- CIRCULAR RESELL / RECYCLE ARROWS (giving things a second life) -->
+  <g>
+    <!-- Top-Right Arc with Arrowhead (Cyan to Teal) -->
+    <path d="M 256 64 A 192 192 0 0 1 448 256" 
+          fill="none" 
+          stroke="url(#cyanSweep)" 
+          stroke-width="24" 
+          stroke-linecap="round" />
+    <!-- Arrowhead Top-Right -->
+    <path d="M 448 256 L 464 230 L 434 236 Z" fill="#67e8f9" />
+
+    <!-- Bottom-Left Arc with Arrowhead (Emerald to Mint) -->
+    <path d="M 256 448 A 192 192 0 0 1 64 256" 
+          fill="none" 
+          stroke="url(#emeraldSweep)" 
+          stroke-width="24" 
+          stroke-linecap="round" />
+    <!-- Arrowhead Bottom-Left -->
+    <path d="M 64 256 L 48 282 L 78 276 Z" fill="#34d399" />
+  </g>
+
+  <!-- MAIN EMBLEM: Stylized Geometric 'R' (ResellHub) -->
+  <g filter="url(#rGlow)">
+    <!-- Vertical Spine / Stem of 'R' -->
+    <rect x="156" y="128" width="52" height="256" rx="18" fill="url(#rGrad)" />
+
+    <!-- Top Rounded Bowl of 'R' -->
+    <path d="M 190 128 L 286 128 C 342 128, 374 158, 374 206 C 374 254, 342 284, 286 284 L 190 284 Z" 
+          fill="url(#rGrad)" />
+
+    <!-- Bowl Cutout Hole -->
+    <path d="M 208 172 L 282 172 C 310 172, 326 186, 326 206 C 326 226, 310 240, 282 240 L 208 240 Z" 
+          fill="#0c5b55" />
+
+    <!-- Dynamic Diagonal Kick Leg of 'R' -->
+    <path d="M 260 262 L 354 372 C 362 381, 376 384, 388 380 C 400 376, 406 362, 396 350 L 310 250 Z" 
+          fill="url(#rGrad)" />
+  </g>
+
+  <!-- KAZAKHSTAN GOLD SUN / TENGE SYMBOL DISK ACCENT -->
+  <g filter="url(#goldGlow)">
+    <!-- Outer Glow Ring -->
+    <circle cx="374" cy="128" r="22" fill="none" stroke="#fef08a" stroke-width="3" stroke-opacity="0.8" />
+    <!-- Core Gold Sun Disk -->
+    <circle cx="374" cy="128" r="17" fill="url(#goldSun)" />
+    <!-- Inner Spark -->
+    <circle cx="371" cy="125" r="5" fill="#ffffff" fill-opacity="0.7" />
+  </g>
+</svg>

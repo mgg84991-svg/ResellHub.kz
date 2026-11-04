@@ -8,6 +8,7 @@ export const MobileNav: React.FC = () => {
     setCurrentView,
     currentUser,
     setIsAuthModalOpen,
+    openAuthModal,
     setIsCreateModalOpen,
     setIsChatModalOpen,
     unreadMessagesCount,
@@ -49,8 +50,7 @@ export const MobileNav: React.FC = () => {
       <button
         onClick={() => {
           if (!currentUser) {
-            showToast('Для загрузки объявления требуется ввести логин и пароль', 'info');
-            setIsAuthModalOpen(true);
+            openAuthModal('login', 'Чтобы подать объявление, войдите в систему или зарегистрируйтесь по номеру телефона');
           } else {
             setIsCreateModalOpen(true);
           }

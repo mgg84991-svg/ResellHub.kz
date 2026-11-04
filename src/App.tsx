@@ -16,6 +16,10 @@ import { UserProfile } from './components/UserProfile';
 import { AdminPanel } from './components/AdminPanel';
 import { Toast } from './components/Toast';
 import { Footer } from './components/Footer';
+import { PWAInstallModal } from './components/PWAInstallModal';
+import { PWAInstallButton } from './components/PWAInstallButton';
+import { AppBadgeModal } from './components/AppBadgeModal';
+import { OfflineIndicator } from './components/OfflineIndicator';
 import { Sparkles, SlidersHorizontal, PackageOpen, RotateCcw } from 'lucide-react';
 
 const MainContent: React.FC = () => {
@@ -24,7 +28,11 @@ const MainContent: React.FC = () => {
     listings, 
     filters, 
     resetFilters,
-    currentUser
+    currentUser,
+    isPWAInstallModalOpen,
+    setIsPWAInstallModalOpen,
+    isBadgeModalOpen,
+    setIsBadgeModalOpen
   } = useApp();
 
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
@@ -201,6 +209,20 @@ const MainContent: React.FC = () => {
       <ChatModal />
       <OrderCheckoutModal />
       <ReviewModal />
+      <PWAInstallModal 
+        isOpen={isPWAInstallModalOpen} 
+        onClose={() => setIsPWAInstallModalOpen(false)} 
+      />
+      <AppBadgeModal
+        isOpen={isBadgeModalOpen}
+        onClose={() => setIsBadgeModalOpen(false)}
+      />
+
+      {/* PWA Floating Install Button (shows only if not installed) */}
+      <PWAInstallButton variant="floating" />
+
+      {/* Offline Status Connectivity Banner */}
+      <OfflineIndicator />
 
       {/* Live Toast Alerts */}
       <Toast />
